@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { signupURL, validUserSignup } from "../test-data/users";
 
 export class SignupPage {
   private readonly firstName: Locator;
@@ -23,5 +24,23 @@ export class SignupPage {
     this.githubSignup = page.getByRole("button", {
       name: "Continue with Github",
     });
+  }
+
+  async signup() {
+    //adding empeded goto method
+    await this.page.goto(signupURL);
+
+    const password = process.env.SIGNUP_PASSWORD;
+    if (!password) {
+      throw new Error(
+        "the password that I should get from .env file is not existing",
+      );
+    }
+
+    await this.email.fill(validUserSignup.email);
+    await this.firstName.fill(validUserSignup.firstname);
+    await this.lastName.fill(validUserSignup.lastname);
+    await this.username.fill(validUserSignup.username);
+    await this.password.fill(password);
   }
 }
